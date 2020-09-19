@@ -4,3 +4,4 @@ server:
 database:
   url: localhost
   port: 27017
+imageDir: images

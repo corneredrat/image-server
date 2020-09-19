@@ -6,10 +6,11 @@ import (
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 	"github.com/corneredrat/image-server/api-server/api"
+	"github.com/corneredrat/image-server/api-server/config"
 	_ "github.com/corneredrat/image-server/api-server/docs"
 )
 
-var cfg config
+var cfg Config
 
 // @title Image Service API
 // @version 0.2

@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type config struct {
+type Config struct {
 	Server	struct {
 		ListenPort	string	`yaml:"listenPort"`
 		BindAddress	string	`yaml:"bindAddress"`
@@ -17,12 +17,13 @@ type config struct {
 		URL			string	`yaml:"url"`
 		PORT		string	`yaml:"port"`
 	}
+	imageDir		string `yaml:"imageDir"`
 } 
 
-func (c *config) load() error {
+func (c *Config) load() error {
 	
 	// read config data from file.
-	binData, err := ioutil.ReadFile("config.yaml")
+	binData, err := ioutil.ReadFile("config/config.yaml")
 	if nil != err {
 		msg := fmt.Sprintf("unable to read config file 'config.yaml' : %s", err.Error())
 		log.Fatal(msg)
