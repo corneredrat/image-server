@@ -2,19 +2,12 @@ package api
 import (
 	"net/http"
 	"io"
-	"fmt"
 	"os"
 	"github.com/gin-gonic/gin"
-	"crypto/md5"
 	log "github.com/sirupsen/logrus"
 )
 
-func logAndSetResponse(message string, statusCode int,c *gin.Context) {
-	log.Error(message)
-	c.JSON(statusCode, gin.H{
-		"message": message,
-	})
-}
+
 
 func AddImageToAlbum(c *gin.Context) {
 	
@@ -37,8 +30,7 @@ func AddImageToAlbum(c *gin.Context) {
 		message := "unable read image file. : "+err.Error()
 		logAndSetResponse(message, http.StatusInternalServerError, c)
 	}
-	imageHash		= fmt.Sprintf("%x",md5.Sum(imageData))
-	log.Info("imageHash: ",imageHash)
+	imageHash		= computeHash(imageData)
 	localFile, _ 	:= os.Create(uploadedFile.Filename)
 	
 	_, err = io.Copy(localFile,f)
