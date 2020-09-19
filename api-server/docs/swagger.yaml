@@ -1,0 +1,17 @@
+basePath: /
+host: localhost:8080
+info:
+  contact:
+    email: raghunandankst@gmail.com
+    name: Raghu
+  description: Serves API requests to GET and POST images and albums
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Image Service API
+  version: "0.2"
+paths: {}
+swagger: "2.0"
+x-extension-openapi:
+  example: value on a json format

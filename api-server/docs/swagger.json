@@ -1,0 +1,23 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Serves API requests to GET and POST images and albums",
+        "title": "Image Service API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Raghu",
+            "email": "raghunandankst@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "0.2"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {},
+    "x-extension-openapi": {
+        "example": "value on a json format"
+    }
+}
