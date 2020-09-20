@@ -10,8 +10,6 @@ import (
 	_ "github.com/corneredrat/image-server/api-server/docs"
 )
 
-var cfg Config
-
 // @title Image Service API
 // @version 0.2
 // @description Serves API requests to GET and POST images and albums
@@ -30,7 +28,8 @@ var cfg Config
 
 func main() {
 	// initialize config data.
-	err := cfg.load()
+	err := config.Load()
+	log.Info("config: ", config.Options)
 	if nil != err {
 		log.Fatal("unable to initalize configuration. : ", err.Error())
 		return
@@ -41,17 +40,17 @@ func main() {
 	r := gin.Default()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	
-	r.GET("/album",func (c *gin.Context) {})
-	r.GET("/album/:albumname",func (c *gin.Context) {})
+	r.GET("/album",api.GetAlbum)
+	r.GET("/album/:albumname",api.GetSingleAlbum)
 	r.DELETE("/album", func (c *gin.Context) {})
-	r.POST("/album", func (c *gin.Context) {})
+	r.POST("/album", api.AddAlbum)
 	
 	r.GET("/album/:albumname/image",func (c *gin.Context) {
 		albumName := c.Param("albumname")
 		log.Info("recieved request for album : ", albumName)
 	})
-	r.DELETE("/album/:album/image", api.AddImageToAlbum)
-	r.POST("/album/:album/image",api.AddImageToAlbum)
+	r.DELETE("/album/:album/image",func (c *gin.Context) {} )
+	r.POST("/album/:albumname/image",api.AddImage)
 	
 	r.Run()
 }

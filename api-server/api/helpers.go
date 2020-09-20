@@ -5,6 +5,8 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io"
+	"errors"
+	"strings"
 	"os"
 	"mime/multipart"
 	log "github.com/sirupsen/logrus"
@@ -22,11 +24,25 @@ func computeHash(data []byte) string {
 	return fmt.Sprintf("%x",md5.Sum(data))
 }
 
-func saveFile(imageHash string, imageName string, f multipart.File) error {
-	localFile, _ 	:= os.Create("images/"+imageHash+"_"+imageName)
+func fileExists(filename string) bool {
+    info, err := os.Stat(filename)
+    if os.IsNotExist(err) {
+        return false
+    }
+    return !info.IsDir()
+}
+
+func saveFile(imageHash string, imageName string, f multipart.File) (string, error) {
+	temp 		:= strings.Split(imageName, ".")
+	format 		:= temp[len(temp)-1]
+	fileName	:= "images/"+imageHash+"."+format
+	if fileExists(fileName) {
+		return fileName, errors.New("FileExsists")
+	}
+	localFile, _ 	:= os.Create(fileName)
 	_, err 			:= io.Copy(localFile,f)
 	if err != nil {
-		return err
+		return fileName, err
 	}
-	return nil
+	return fileName, nil
 }

@@ -20,7 +20,9 @@ type Config struct {
 	imageDir		string `yaml:"imageDir"`
 } 
 
-func (c *Config) load() error {
+var Options Config
+
+func Load() error {
 	
 	// read config data from file.
 	binData, err := ioutil.ReadFile("config/config.yaml")
@@ -30,7 +32,7 @@ func (c *Config) load() error {
 		return errors.New("failed to load config.")
 	}
 	// load config into the struct variable
-	err = yaml.Unmarshal(binData,&c)
+	err = yaml.Unmarshal(binData,&Options)
 	if nil != err {
 		msg := fmt.Sprintf("unable to parse contents of config file 'config.yaml' : %s", err.Error())
 		log.Fatal(msg)
