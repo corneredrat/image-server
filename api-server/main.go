@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
+	"github.com/zsais/go-gin-prometheus"
 	"github.com/corneredrat/image-server/api-server/api"
 	"github.com/corneredrat/image-server/api-server/config"
 	_ "github.com/corneredrat/image-server/api-server/docs"
@@ -38,18 +39,19 @@ func main() {
 	}
 
 	r := gin.Default()
+	p := ginprometheus.NewPrometheus("gin")
+	p.Use(r)
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	
 	r.GET("/album",api.GetAlbum)
 	r.GET("/album/:albumname",api.GetSingleAlbum)
-	r.DELETE("/album", func (c *gin.Context) {})
+	r.DELETE("/album/:albumname", api.DeleteSingleAlbum)
 	r.POST("/album", api.AddAlbum)
 	
-	r.GET("/album/:albumname/image",func (c *gin.Context) {
-		albumName := c.Param("albumname")
-		log.Info("recieved request for album : ", albumName)
-	})
-	r.DELETE("/album/:album/image",func (c *gin.Context) {} )
+	r.GET("/album/:albumname/image/:imagename",api.GetImage)
+	r.GET("/album/:albumname/image",api.GetAllImagesInAlbum)
+	r.DELETE("/album/:albumname/image/:imagename",api.DeleteImage)
 	r.POST("/album/:albumname/image",api.AddImage)
 	
 	r.Run()

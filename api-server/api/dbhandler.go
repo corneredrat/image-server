@@ -120,14 +120,79 @@ func addAlbumToDB(albumName string) error {
 	return nil
 }
 
-func deleteAlbum() {
-
+/**
+	WARNING: THIS DOES NOT PERFORM CHECKS JUST DELETES THE ENTRY.
+*/
+func deleteAlbumFromDB(albumName string) error {
+	client, context, cancel, err := getClient()
+	// cleanup
+	defer client.Disconnect(context)
+	defer cancel()
+	if err != nil {
+		message := fmt.Sprintf("unable to initialize mongo client. : %v", err.Error())
+		return errors.New(message)
+	}
+	database 			:= client.Database("nokiatask")
+	albumsCollection 	:= database.Collection("albums")
+	_, err = albumsCollection.DeleteOne(context, bson.D{{"name",albumName}},  options.Delete())
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 
 
 func getImageFromAlbum(imageName string, albumName string) (image, error) {
-
+	
+	var result 		bson.M
+	var albm 		album
+	var img 		image
+	var imageHash 	string
+	imageFound		:= false
+	client, context, cancel, err := getClient()
+	// cleanup
+	defer client.Disconnect(context)
+	defer cancel()
+	if err != nil {
+		message := fmt.Sprintf("unable to initialize mongo client. : %v", err.Error())
+		return img, errors.New(message)
+	}
+	database 			:= client.Database("nokiatask")
+	albumsCollection 	:= database.Collection("albums")
+	
+	log.Info("albumName: ",albumName)
+	err = albumsCollection.FindOne(context, bson.D{{"name",albumName}}, options.FindOne()).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return img, errors.New("AlbumNotFound")
+		} else {
+			return img, err
+		}
+	}
+	
+	albm.bindBson(result)
+	for _, image := range albm.images {
+		if imageName == image["name"] {
+			imageFound			= true
+			imageHash 			= image["hash"]
+			imagesCollection	:= database.Collection("images")
+			err = imagesCollection.FindOne(context, bson.D{{"hash",imageHash}}, options.FindOne()).Decode(&result)
+			if err != nil {
+				if err == mongo.ErrNoDocuments {
+					return img, errors.New("ImageNotFound")
+				}
+				return img, err
+			}
+			img.bindBson(result)
+		}
+	}
+	if imageFound {
+		return img, nil
+	} else {
+		return img, errors.New("ImageNotFound")
+	}
+	
 }
 
 func addImageToAlbum(albumName, imageName string, imageHash string) error {
@@ -231,7 +296,7 @@ func addImageToDB(imageName string, imageLocation string, imageHash string)  err
 	// at this point, it appears that image already exsists in the database, so we need to increase the counter - the number of times it is referenced.
 	log.Info("image seems to be already present in the db, updating counter.")
 	img.bindBson(result)
-	img.counter = img.counter+1
+	img.counter = img.counter + 1
 	filter 		:= bson.D{{"hash", imageHash}}
 	update 		:= bson.D{{"counter",img.counter}}
 	opts		:= options.Update()
@@ -242,6 +307,85 @@ func addImageToDB(imageName string, imageLocation string, imageHash string)  err
 	return nil	
 }
 
-func deleteImageFromAlbum() {
+func deleteImageFromAlbum(imageName string, albumName string) error {
+	var result 		bson.M
+	var albm 		album
+	var img 		image
+	var imageHash 	string
+	client, context, cancel, err := getClient()
+	// cleanup
+	defer client.Disconnect(context)
+	defer cancel()
+	if err != nil {
+		message := fmt.Sprintf("unable to initialize mongo client. : %v", err.Error())
+		return errors.New(message)
+	}
+	database 			:= client.Database("nokiatask")
+	albumsCollection 	:= database.Collection("albums")
+	
+	log.Info("albumName: ",albumName)
+	err = albumsCollection.FindOne(context, bson.D{{"name",albumName}}, options.FindOne()).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return errors.New("AlbumNotFound")
+		} else {
+			return err
+		}
+	}
+	albm.bindBson(result)
 
+	if len(albm.images) == 0 {
+		return errors.New("ImageNotFound")
+	}
+
+	for _, image := range albm.images {
+		imageHash 			= image["hash"]
+		imagesCollection	:= database.Collection("images")
+		err = imagesCollection.FindOne(context, bson.D{{"hash",imageHash}}, options.FindOne()).Decode(&result)
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				return errors.New("ImageNotFound")
+			}
+			return err
+		}
+		img.bindBson(result)
+		// Update album collection
+		images 		:= albm.images
+		imgElement 	:= map[string]string {"name":imageName, "hash":imageHash}
+		pos 		:= findImageInArray(imgElement, images)
+		if pos == -1 {return errors.New("ImageNotFound")}
+		log.Info(string(pos))
+		images[len(images)-1], images[pos] = images[pos], images[len(images)-1]
+		images = images[:len(images)-1]
+		filter 		:= bson.D{{"name", albumName}}
+		update 		:= bson.D{{"images",images}}
+		opts		:= options.Update()
+		_, err 		= albumsCollection.UpdateOne(context, filter,bson.D{{"$set",update}} , opts)
+		if err != nil {
+			return err
+		}
+		// Update image collection
+		if img.counter == 1 {
+			log.Warning("This is the last occurance of that image in the filesystem. Deleting...")
+			filter 		:= bson.D{{"hash", img.hash}}
+			_, err := imagesCollection.DeleteOne(context, filter,  options.Delete())
+			if err != nil {
+				return err
+			}
+			deleteFile(img.location)
+			if err != nil {
+				return err
+			} 
+		} else {
+			img.counter = img.counter - 1
+			filter 		:= bson.D{{"hash", img.hash}}
+			update 		:= bson.D{{"counter",img.counter}}
+			opts		:= options.Update()
+			_, err 		= imagesCollection.UpdateOne(context, filter,bson.D{{"$set",update}} , opts)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }

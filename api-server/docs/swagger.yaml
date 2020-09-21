@@ -1,4 +1,20 @@
 basePath: /
+definitions:
+  multipart.Form:
+    properties:
+      file:
+        additionalProperties:
+          items:
+            $ref: '#/definitions/multipart.FileHeader'
+          type: array
+        type: object
+      value:
+        additionalProperties:
+          items:
+            type: string
+          type: array
+        type: object
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -11,7 +27,223 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Image Service API
   version: "0.2"
-paths: {}
+paths:
+  /album:
+    get:
+      description: |-
+        Returns dictionary object of all albums, use query string parameters to narrow down searching.
+        example: /album?name=myAlbum1&name=myAlbum2
+      responses:
+        "200":
+          description: returns json data of the album.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: if album is not present.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: on internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: list all the albums
+      tags:
+      - Album
+    post:
+      description: |-
+        Create album, check example for details on payload.
+        Example payload:
+        {
+        "name":"myAlbumName"
+        }
+      parameters:
+      - description: refer to example
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      responses:
+        "201":
+          description: Status Created.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: on internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: add album
+      tags:
+      - Album
+  /album/{albumname}:
+    delete:
+      parameters:
+      - description: enter album name that needs to be deleted.
+        in: path
+        name: albumname
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Status OK.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: on internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: delete album
+      tags:
+      - Album
+    get:
+      description: returns dictionary object of album
+      parameters:
+      - description: Album Name
+        in: path
+        name: albumname
+        required: true
+        type: string
+      responses:
+        "200":
+          description: returns json data of the album.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: if album is not present.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: on internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: get details of an album
+      tags:
+      - Album
+    post:
+      parameters:
+      - description: Image that needs to be uploaded
+        in: body
+        name: image
+        required: true
+        schema:
+          $ref: '#/definitions/multipart.Form'
+      responses:
+        "201":
+          description: Status Accepted.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: on internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: add an image
+      tags:
+      - Image
+  /album/{albumname}/image:
+    get:
+      parameters:
+      - description: enter album name whose images are to be returned.
+        in: path
+        name: albumname
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Status OK.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: on internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: get all images in album
+      tags:
+      - Image
+  /album/{albumname}/image/{imagename}:
+    delete:
+      parameters:
+      - description: enter albumname in which image is present
+        in: path
+        name: albumname
+        required: true
+        type: string
+      - description: enter imagename which needs to be deleted
+        in: path
+        name: imagename
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Status OK.
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: on internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: delete an image
+      tags:
+      - Image
+    get:
+      parameters:
+      - description: enter album name whose image is to be returned.
+        in: path
+        name: albumname
+        required: true
+        type: string
+      - description: enter image name which needs to be returned.
+        in: path
+        name: imagename
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Status OK.
+          schema:
+            $ref: '#/definitions/multipart.Form'
+        "500":
+          description: on internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: get Image
+      tags:
+      - Image
 swagger: "2.0"
 x-extension-openapi:
   example: value on a json format

@@ -46,3 +46,20 @@ func saveFile(imageHash string, imageName string, f multipart.File) (string, err
 	}
 	return fileName, nil
 }
+
+func deleteFile(filename string) error {
+	err := os.Remove(filename) 
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func findImageInArray(img map[string]string, array []map[string]string) int {
+	for i, element := range(array) {
+		if element["name"] == img["name"]  {
+			return i
+		}
+	}
+	return -1
+}
