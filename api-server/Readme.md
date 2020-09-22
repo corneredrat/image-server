@@ -67,7 +67,7 @@ database: nokiatask
 image/
     |
     \_____ d41d8cd98f00b204e9800998ecf8427e.jpg
-    \_____ d41d8cd98f00b204e9800998ecf8427e.png
+    \_____ fb1287ef283cee79c1c9d610d17bb1a7.jpg
 ```
 
 <a name="api-usage"></a>
