@@ -160,8 +160,6 @@ func getImageFromAlbum(imageName string, albumName string) (image, error) {
 	}
 	database 			:= client.Database("nokiatask")
 	albumsCollection 	:= database.Collection("albums")
-	
-	log.Info("albumName: ",albumName)
 	err = albumsCollection.FindOne(context, bson.D{{"name",albumName}}, options.FindOne()).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -209,7 +207,6 @@ func addImageToAlbum(albumName, imageName string, imageHash string) error {
 	}
 	database 			:= client.Database("nokiatask")
 	albumsCollection 	:= database.Collection("albums")
-	log.Info("albumName: ",albumName)
 	// check if the album exsists in the database
 	err = albumsCollection.FindOne(context, bson.D{{"name",albumName}}, options.FindOne()).Decode(&result)
 	if err != nil {
@@ -322,8 +319,6 @@ func deleteImageFromAlbum(imageName string, albumName string) error {
 	}
 	database 			:= client.Database("nokiatask")
 	albumsCollection 	:= database.Collection("albums")
-	
-	log.Info("albumName: ",albumName)
 	err = albumsCollection.FindOne(context, bson.D{{"name",albumName}}, options.FindOne()).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {

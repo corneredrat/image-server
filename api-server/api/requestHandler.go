@@ -172,6 +172,15 @@ func DeleteImage(c *gin.Context) {
 			return
 		}
 	}
+	notifier.Notify(
+		map[string]string{
+			"entity"	:"image",
+			"album"		: albumName,
+			"image"		: imageName,
+			"action"	: "create",
+		},
+		notifier.CreateOp,
+	)
 	c.JSON(http.StatusAccepted, gin.H{"message":"image deleted from album"})
 }
 
@@ -322,6 +331,15 @@ func AddImage(c *gin.Context) {
 			logAndSetResponse(msg, http.StatusInternalServerError, c)
 			return
 		}
-	}		
+	}
+	notifier.Notify(
+		map[string]string{
+			"entity"	:"image",
+			"album"		: albumName,
+			"image"		: imageName,
+			"action"	: "create",
+		},
+		notifier.CreateOp,
+	)
 	c.JSON(http.StatusCreated, gin.H{"message":"image added"})
 }

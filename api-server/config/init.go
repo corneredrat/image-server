@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"fmt"
 	"errors"
 	"io/ioutil"
@@ -41,6 +42,21 @@ func Load() error {
 		msg := fmt.Sprintf("unable to parse contents of config file 'config.yaml' : %s", err.Error())
 		log.Fatal(msg)
 		return errors.New("failed to load config.")
+	}
+	// override defaults with environment variables
+	// Mongo URL
+	
+	if mongoURL, ok := os.LookupEnv("MONGO_URL"); ok {
+		Options.Database.URL = mongoURL
+	}
+	if mongoPORT, ok := os.LookupEnv("MONGO_PORT"); ok {
+		Options.Database.PORT = mongoPORT
+	}
+	if kafkaURL, ok := os.LookupEnv("KAFKA_URL"); ok {
+		Options.Kafka.URL = kafkaURL
+	}
+	if kafkaPORT, ok := os.LookupEnv("KAFKA_PORT"); ok {
+		Options.Kafka.PORT = kafkaPORT
 	}
 	msg := fmt.Sprintf("Listen Port : %v",Options.Server.ListenPort)
 	log.Info(msg)

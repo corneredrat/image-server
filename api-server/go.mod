@@ -12,6 +12,7 @@ require (
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.7.1 // indirect
+	github.com/segmentio/kafka-go v0.4.2
 	github.com/sirupsen/logrus v1.6.0
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
@@ -22,6 +23,6 @@ require (
 	go.mongodb.org/mongo-driver v1.4.1
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
 	golang.org/x/tools v0.0.0-20200917221617-d56e4e40bc9d // indirect
-	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.4.2
+	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.4.2 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )
