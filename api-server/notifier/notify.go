@@ -1,4 +1,4 @@
-package notify
+package notifier
 import (
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 	"github.com/corneredrat/image-server/api-server/config"

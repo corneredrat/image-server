@@ -7,7 +7,7 @@ import (
 	_ "mime/multipart"
 	log "github.com/sirupsen/logrus"
 	"github.com/gin-gonic/gin"
-	"github.com/corneredrat/image-server/api-server/notifer"
+	"github.com/corneredrat/image-server/api-server/notifier"
 )
 //@tags Image
 //@summary get Image 
