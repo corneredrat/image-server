@@ -76,7 +76,7 @@ image/
 to check the APIs that are supported, please head over to `<url>/swagger/index.html`
 
 ### Metrcs:
-access metrics at `<url-endpoint>/metrics`
+access metrics at `<url>/metrics`
 
 ### Uploading file
 Unfortunately, I havent figured out how to upload an image via swagger UI, So heres screenshots on how a file can be sent to this server:
