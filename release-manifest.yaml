@@ -36,7 +36,7 @@ spec:
     targetPort: 8080
     protocol: TCP
   selector:
-    run: imageserver
+    app: imageserver
   type: LoadBalancer
 ---
 ###########################################
