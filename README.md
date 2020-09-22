@@ -23,7 +23,7 @@ kubectl apply -f release-manigest-init.yaml -n imgserver
 kubectl get svc -n imgserver
 # \--------> note down the svc's public IP
 ```
-- Update api-server/main.go (line number 25) to change URL. this is important for swagget-ui to work.
+- Update api-server/main.go (line number 25) to change URL. this is important for swagger-ui to work.
 ```
 // @host localhost:8080             <---------change this
 // @host <loadbalancer-ip>          <---------like this
