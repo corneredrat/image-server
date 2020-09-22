@@ -34,7 +34,7 @@ spec:
   ports:
   - port: 80
     targetPort: 8080
-    protocol: http
+    protocol: TCP
   selector:
     run: imageserver
   type: LoadBalancer
