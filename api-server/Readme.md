@@ -7,7 +7,7 @@
 - [APIs/Usage Info](#api-usage)
 - [My Comments](#comments)
 <a name="bld-steps"></a>
-### build steps
+## build steps
 ```
 # Install depedancy
 go mod vendor
@@ -22,7 +22,7 @@ go build -m vendor -o server
 go build -m vendor -o server.exe
 ```
 <a name="run-steps"></a>
-# Run server:
+## Run server:
 ```
 # Linux:
 ./server
@@ -71,7 +71,7 @@ image/
 ```
 
 <a name="api-usage"></a>
-# APIs supported:
+## APIs supported:
 
 to check the APIs that are supported, please head over to `<url>/swagger/index.html`
 
