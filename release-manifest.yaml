@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: raghunandanbs/imageserver:v1
+        image: raghunandanbs/imageserver:v2
         ports:
         - containerPort: 8080
 ---

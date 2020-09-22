@@ -14,7 +14,7 @@
         },
         "version": "0.2"
     },
-    "host": "localhost:8080",
+    "host": "http://34.72.84.34/",
     "basePath": "/",
     "paths": {
         "/album": {
