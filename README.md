@@ -19,7 +19,7 @@ kubectl create namespace imgserver
 # This deploys required necessary basic components
 kubectl apply -f release-manigest-init.yaml -n imgserver
 
-# Wait for a while, so that svc if the image service has a loadBalncer IP
+# Wait for a while, so that svc of the image service has a loadBalncer IP
 kubectl get svc -n imgserver
 # \--------> note down the svc's public IP
 ```
