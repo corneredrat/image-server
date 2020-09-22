@@ -2,10 +2,10 @@ server:
   listenPort:  8080
   bindAddress: 0.0.0.0
 database:
-  url: localhost
+  url: mongo
   port: 27017
 imageDir: images
 kafka:
-  url: 35.221.160.26
+  url: fake.kafka.domain
   port: 9092
 imagePath: image
