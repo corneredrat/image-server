@@ -1,1 +1,78 @@
+###########################################
+#     Manifests for api server
+###########################################
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imageserver
+  labels:
+    app: imageserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: imageserver
+  template:
+    metadata:
+      labels:
+        app: imageserver
+    spec:
+      containers:
+      - name: server
+        image: raghunandanbs/imageserver:v1
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imageserver-svc
+  labels:
+    app: imageserver
+spec:
+  ports:
+  - port: 80
+    targetport: 8080
+    protocol: http
+  selector:
+    run: imageserver
+---
+###########################################
+#     Manifests for mongoDB
+###########################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  ports:
+  - port: 27017
+    name: db
+  clusterIP: None
+  selector:
+    app: mongo
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: mongo
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo
+        ports:
+        - containerPort: 27017
+          name: mongo
