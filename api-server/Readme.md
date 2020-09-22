@@ -32,9 +32,7 @@ Unfortunately, I havent figured out how to upload an image via swagger UI, So he
 > Prerequisutes : You need to have created an album in the first place, to upload an image.
 - In postman, select method as post, Make sure the headers are right (default ones should work).
 ![image1](assets/img-upload-step1.PNG)
-- Under body, select mime type as formdata
+- Under body, select mime type as formdata, and under key, select type as file.
 ![image2](assets/img-upload-step2.PNG)
-- Under key, select type as file.
+- Select file from your file system, and click on send.
 ![image3](assets/img-upload-step3.PNG)
-- Select an image from file system and check on send
-![image3](assets/img-upload-step4.PNG)
