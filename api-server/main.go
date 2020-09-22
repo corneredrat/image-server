@@ -22,7 +22,8 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host 34.72.84.34
+// @host localhost:8080 
+// CHANGE THE ABOVE URL ONCE ITS DEPLOYED IN CLUSTER, REPLACE IT WITH LOADBALANCER IP 
 // @BasePath /
 // @query.collection.format multi
 // @x-extension-openapi {"example": "value on a json format"}
