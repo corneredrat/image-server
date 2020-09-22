@@ -1,6 +1,8 @@
 package api
 import (
 	"net/http"
+	"bytes"
+	"io"
 	"fmt"
 	_ "mime/multipart"
 	log "github.com/sirupsen/logrus"
@@ -262,27 +264,32 @@ func AddImage(c *gin.Context) {
 	var albumName 		string
 	var imageName		string
 	var imageHash		string
-	var imageData		[]byte
+	var imageData		= bytes.NewBuffer(nil)
 	var imageLocation 	string
 	//var al			album
 	//var img 		image		
 
 	// Read uploaded file from request.
 	f, uploadedFile, err := c.Request.FormFile("file")
+	defer f.Close()
 	if nil != err {
 		message := "unable read image file. : "+err.Error()
 		logAndSetResponse(message, http.StatusInternalServerError, c)
 		return
 	}
 	// compute hash of the file
-	_,err 	= f.Read(imageData)
+	if _, err := io.Copy(imageData, f); err != nil {
+		message := "unable read image file. : "+err.Error()
+		logAndSetResponse(message, http.StatusInternalServerError, c)
+		return
+	}
 	if nil != err {
 		message := "unable read image file. : "+err.Error()
 		logAndSetResponse(message, http.StatusInternalServerError, c)
 		return
 	}
 	imageName			= uploadedFile.Filename
-	imageHash			= computeHash(imageData)
+	imageHash			= computeHash(imageData.Bytes())
 	imageLocation, err	= saveFile(imageHash, imageName, f)
 	if err != nil {
 		if nil != err {

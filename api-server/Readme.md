@@ -3,6 +3,7 @@
 ## Index
 - [Build steps](#bld-steps)
 - [Running the application](#run-steps)
+- [How data is Handled](#data-handling)
 - [APIs/Usage Info](#api-usage)
 - [My Comments](#comments)
 <a name="bld-steps"></a>
@@ -28,11 +29,56 @@ go build -m vendor -o server.exe
 # Windows:
 .\server.exe
 ```
+
+<a name="data-handling"></a>
+## Data storage and handling
+- MongoDB used to store information about albums and images
+- filesystem is used to store images. Their name is replaced with their hash.
+    for example, if file name is image.jpg, it'll be stored as d41d8cd98f00b204e9800998ecf8427e.jpg, depending on its md5 hash.
+
+#### Database
+```
+database: nokiatask
+    |
+    \___ Collection <album>
+    |       |
+    |       \__________________ name: album name (primary key)
+    |       |                   images:
+    |       |                       - name: image name (must be unique in this list)
+    |       |                         hash: image hash
+    |       |                       - name: another image name
+    |       |                         hash: another image hash
+    |       \__________________ name: another album name
+    |                           images:
+    |                               nil
+    |                           ...
+    |
+    \___ Collection <image>
+            |
+            \__________________ name: image name
+            |                   hash: image hash
+            |                   counter: number of times this image is referenced (in different albums)
+            |                   location: path to the image
+            \__________________ ...
+
+```
+#### Filesystem
+```
+image/
+    |
+    \_____ d41d8cd98f00b204e9800998ecf8427e.jpg
+    \_____ d41d8cd98f00b204e9800998ecf8427e.png
+```
+
 <a name="api-usage"></a>
 # APIs supported:
 
 to check the APIs that are supported, please head over to `<url>/swagger/index.html`
 
+### Metrcs:
+access metrics at `<url-endpoint>/metrics`
+
+### Uploading file
 Unfortunately, I havent figured out how to upload an image via swagger UI, So heres screenshots on how a file can be sent to this server:
 ### Steps
 > Prerequisutes : You need to have created an album in the first place, to upload an image.
@@ -40,8 +86,8 @@ Unfortunately, I havent figured out how to upload an image via swagger UI, So he
 ![image1](assets/img-upload-step1.PNG)
 - Under body, select mime type as formdata, and under key, select type as file.
 ![image2](assets/img-upload-step2.PNG)
-- Select file from your file system, and click on send.
-![image3](assets/img-upload-step3.PNG)
+- Set key value as file, and Select file from your file system, and click on send.
+![image3](assets/img-upload-step5.PNG)
 
 <a name="comments"></a>
 ## My Comments:
