@@ -30,7 +30,6 @@ import (
 func main() {
 	// initialize config data.
 	err := config.Load()
-	log.Info("config: ", config.Options)
 	if nil != err {
 		log.Fatal("unable to initalize configuration. : ", err.Error())
 		return
@@ -54,6 +53,6 @@ func main() {
 	r.DELETE("/album/:albumname/image/:imagename",api.DeleteImage)
 	r.POST("/album/:albumname/image",api.AddImage)
 	
-	r.Run()
+	r.Run(config.Options.Server.BindAddress+":"+config.Options.Server.ListenPort)
 }
 

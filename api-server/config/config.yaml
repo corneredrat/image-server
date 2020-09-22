@@ -5,3 +5,7 @@ database:
   url: localhost
   port: 27017
 imageDir: images
+kafka:
+  url: 35.221.160.26
+  port: 9092
+imagePath: image

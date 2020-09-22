@@ -17,7 +17,11 @@ type Config struct {
 		URL			string	`yaml:"url"`
 		PORT		string	`yaml:"port"`
 	}
-	imageDir		string `yaml:"imageDir"`
+	Kafka			struct {
+		URL			string `yaml: "url"`
+		PORT		string	`yaml:"port"`
+	}
+	ImagePath		string `yaml:"imageDir"`
 } 
 
 var Options Config
@@ -38,5 +42,17 @@ func Load() error {
 		log.Fatal(msg)
 		return errors.New("failed to load config.")
 	}
+	msg := fmt.Sprintf("Listen Port : %v",Options.Server.ListenPort)
+	log.Info(msg)
+	msg = fmt.Sprintf("Listen Addr : %v",Options.Server.BindAddress)
+	log.Info(msg)
+	msg = fmt.Sprintf("MongoDB URL : %v",Options.Database.URL)
+	log.Info(msg)
+	msg = fmt.Sprintf("MongoDB PORT: %v",Options.Database.PORT)
+	log.Info(msg)
+	msg = fmt.Sprintf("Kafka URL   : %v",Options.Kafka.URL)
+	log.Info(msg)
+	msg = fmt.Sprintf("Kafka PORT  : %v",Options.Kafka.PORT)
+	log.Info(msg)
 	return nil
 }
