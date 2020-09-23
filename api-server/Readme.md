@@ -2,6 +2,7 @@
 
 ## Index
 - [Build steps](#bld-steps)
+- [Customising configuration](#customize)
 - [Running the application](#run-steps)
 - [How data is Handled](#data-handling)
 - [APIs/Usage Info](#api-usage)
@@ -21,6 +22,23 @@ go build -m vendor -o server
 # WINDOWS: 
 go build -m vendor -o server.exe
 ```
+<a name="customize"></a>
+## Customising configuration
+In path config/config.yaml, customise values based on your needs, and run the server. Here is an example:
+```
+server:
+  listenPort:  8080
+  bindAddress: 0.0.0.0
+database:
+  url: mongo
+  port: 27017
+imageDir: images
+kafka:
+  url: fake.kafka.domain
+  port: 9092
+imagePath: image
+```
+
 <a name="run-steps"></a>
 ## Run server:
 ```
