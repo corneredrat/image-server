@@ -32,7 +32,7 @@ server:
 database:
   url: mongo
   port: 27017
-imageDir: images
+imageDir: images   # <------- not implmented yet.
 kafka:
   url: fake.kafka.domain
   port: 9092
